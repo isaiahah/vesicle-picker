@@ -26,8 +26,10 @@ def find_mask_intensity(input_mask, preprocessed_micrograph):
     # Make a copy of the input mask
     mask = copy.deepcopy(input_mask)
 
-    # Find the average pixel value within the mask and assign it to a new key
-    mask['intensity'] = np.mean(mask['segmentation']*preprocessed_micrograph)
+    # Find the average normalized pixel value within the mask and assign it to
+    # a new key
+    normalized_micrograph = (preprocessed_micrograph - np.min(preprocessed_micrograph)) / (np.max(preprocessed_micrograph) - np.min(preprocessed_micrograph))
+    mask['intensity'] = np.sum(mask['segmentation']*normalized_micrograph) / np.sum(mask['segmentation'])
 
     # Return the mask
     return mask
